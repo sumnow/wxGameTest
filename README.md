@@ -1,0 +1,2 @@
+# wxGameTest
+wx weixin game
