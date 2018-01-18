@@ -7,24 +7,25 @@ const screenHeight   = window.innerHeight
 
 // 玩家相关常量设置
 const PLAYER_IMG_SRC = 'images/hero.png'
-const PLAYER_WIDTH   = 80
-const PLAYER_HEIGHT  = 80
+const PLAYER_WIDTH   = 40
+const PLAYER_HEIGHT  = 40
 
 let databus = new DataBus()
 
 export default class Player extends Sprite {
-  constructor() {
+  constructor(ctx) {
     super(PLAYER_IMG_SRC, PLAYER_WIDTH, PLAYER_HEIGHT)
 
     // 玩家默认处于屏幕底部居中位置
-    this.x = screenWidth / 2 - this.width / 2
+    this.x = screenWidth / 2 + this.width + 60
     this.y = screenHeight - this.height - 30
 
     // 用于在手指移动的时候标识手指是否已经在飞机上了
     this.touched = false
 
-    this.bullets = []
+    // this.bullets = []
 
+    this.top = 0;
     // 初始化事件监听
     this.initEvent()
   }
@@ -36,39 +37,63 @@ export default class Player extends Sprite {
    * @param {Number} y: 手指的Y轴坐标
    * @return {Boolean}: 用于标识手指是否在飞机上的布尔值
    */
-  checkIsFingerOnAir(x, y) {
-    const deviation = 30
+  // checkIsFingerOnAir(x, y) {
+  //   const deviation = 30
 
-    return !!(   x >= this.x - deviation
-              && y >= this.y - deviation
-              && x <= this.x + this.width + deviation
-              && y <= this.y + this.height + deviation  )
+  //   return !!(   x >= this.x - deviation
+  //             && y >= this.y - deviation
+  //             && x <= this.x + this.width + deviation
+  //             && y <= this.y + this.height + deviation  )
+  // }
+
+
+
+  jump () {
+    this.top +=2 
   }
 
+  down(){
+    this.top -=2 
+  }
+
+
+  render(ctx) {
+    ctx.drawImage(
+      this.img,
+      0,
+      0,
+      PLAYER_WIDTH,
+      PLAYER_HEIGHT,
+      this.left,
+      screenHeight-this.height-30-this.top,
+      100,
+      100
+    )
+  }
   /**
    * 根据手指的位置设置飞机的位置
    * 保证手指处于飞机中间
    * 同时限定飞机的活动范围限制在屏幕中
    */
-  setAirPosAcrossFingerPosZ(x, y) {
-    let disX = x - this.width / 2
-    let disY = y - this.height / 2
+  // setAirPosAcrossFingerPosZ(x, y) {
+  //   let disX = x - this.width / 2
+  //   let disY = y - this.height / 2
 
-    if ( disX < 0 )
-      disX = 0
+  //   if ( disX < 0 )
+  //     disX = 0
 
-    else if ( disX > screenWidth - this.width )
-      disX = screenWidth - this.width
+  //   else if ( disX > screenWidth - this.width )
+  //     disX = screenWidth - this.width
 
-    if ( disY <= 0 )
-      disY = 0
+  //   if ( disY <= 0 )
+  //     disY = 0
 
-    else if ( disY > screenHeight - this.height )
-      disY = screenHeight - this.height
+  //   else if ( disY > screenHeight - this.height )
+  //     disY = screenHeight - this.height
 
-    this.x = disX
-    this.y = disY
-  }
+  //   this.x = disX
+  //   this.y = disY
+  // }
 
   /**
    * 玩家响应手指的触摸事件
@@ -77,32 +102,35 @@ export default class Player extends Sprite {
   initEvent() {
     canvas.addEventListener('touchstart', ((e) => {
       e.preventDefault()
+      console.log(44)
 
-      let x = e.touches[0].clientX
-      let y = e.touches[0].clientY
+      this.update()
+    //   let x = e.touches[0].clientX
+    //   let y = e.touches[0].clientY
 
-      //
-      if ( this.checkIsFingerOnAir(x, y) ) {
-        this.touched = true
+    //   //
+    //   if ( this.checkIsFingerOnAir(x, y) ) {
+    //     this.touched = true
 
-        this.setAirPosAcrossFingerPosZ(x, y)
-      }
+    //     this.setAirPosAcrossFingerPosZ(x, y)
+    //   }
 
-    }).bind(this))
+    // }).bind(this))
 
-    canvas.addEventListener('touchmove', ((e) => {
-      e.preventDefault()
+    // canvas.addEventListener('touchmove', ((e) => {
+    //   e.preventDefault()
 
-      let x = e.touches[0].clientX
-      let y = e.touches[0].clientY
+    //   let x = e.touches[0].clientX
+    //   let y = e.touches[0].clientY
 
-      if ( this.touched )
-        this.setAirPosAcrossFingerPosZ(x, y)
+    //   if ( this.touched )
+    //     this.setAirPosAcrossFingerPosZ(x, y)
 
     }).bind(this))
 
     canvas.addEventListener('touchend', ((e) => {
       e.preventDefault()
+
 
       this.touched = false
     }).bind(this))
@@ -112,15 +140,15 @@ export default class Player extends Sprite {
    * 玩家射击操作
    * 射击时机由外部决定
    */
-  shoot() {
-    let bullet = databus.pool.getItemByClass('bullet', Bullet)
+  // shoot() {
+  //   let bullet = databus.pool.getItemByClass('bullet', Bullet)
 
-    bullet.init(
-      this.x + this.width / 2 - bullet.width / 2,
-      this.y - 10,
-      10
-    )
+  //   bullet.init(
+  //     this.x + this.width / 2 - bullet.width / 2,
+  //     this.y - 10,
+  //     10
+  //   )
 
-    databus.bullets.push(bullet)
-  }
+  //   databus.bullets.push(bullet)
+  // }
 }

@@ -1,5 +1,5 @@
 import Player     from './player/index'
-// import Enemy      from './npc/enemy'
+import Enemy      from './npc/enemy'
 import BackGround from './runtime/background'
 // import GameInfo   from './runtime/gameinfo'
 // import Music      from './runtime/music'
@@ -25,6 +25,7 @@ export default class Main {
     // )
 
     this.bg       = new BackGround(ctx)
+    this.monster  = new Enemy(ctx)
     this.player   = new Player(ctx)
     // this.gameinfo = new GameInfo()
     // this.music    = new Music()
@@ -101,14 +102,14 @@ export default class Main {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     this.bg.render(ctx)
-
+    this.monster.render(ctx)
     // databus.bullets
     //        .concat(databus.enemys)
     //        .forEach((item) => {
     //           item.drawToCanvas(ctx)
     //         })
 
-    this.player.drawToCanvas(ctx)
+    this.player.render(ctx)
 
     // databus.animations.forEach((ani) => {
     //   if ( ani.isPlaying ) {
@@ -122,6 +123,8 @@ export default class Main {
   // 游戏逻辑更新主函数
   update() {
     this.bg.update()
+    this.monster.update()
+    this.player.update()
 
     // databus.bullets
     //        .concat(databus.enemys)
